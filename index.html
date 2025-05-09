@@ -1,72 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buscar Certificado</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-    }
-    #resultado {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Certificado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Buscar Certificado</h1>
-  <p>Digite o nome completo para buscar o seu certificado:</p>
-  <input type="text" id="nome" placeholder="Digite o nome completo">
-  <button onclick="buscarCertificado()">Buscar</button>
+    <h1>Buscar Certificado</h1>
+    <p>Digite o nome completo para buscar o seu certificado:</p>
+    <input type="text" id="nome" placeholder="Digite o nome completo">
+    <button onclick="buscarCertificado()">Buscar</button>
 
-  <div id="resultado"></div>
+    <div id="resultado"></div>
 
-  <script>
-    function buscarCertificado() {
-      const nome = document.getElementById("nome").value.trim().toLowerCase();
-      if (!nome) {
-        alert("Por favor, digite um nome!");
-        return;
-      }
-
-      const urlCSV = "https://raw.githubusercontent.com/<seu-usuario>/<nome-do-repositorio>/main/BaseDeCertificados.csv"; // Altere aqui
-
-      fetch(urlCSV)
-        .then(response => response.text())
-        .then(data => {
-          const linhas = data.split('\n');
-          let linkEncontrado = '';
-
-          for (let i = 0; i < linhas.length; i++) {
-            const linha = linhas[i].split(',');
-            const nomeNoCSV = linha[0]?.trim().toLowerCase();
-            const linkCertificado = linha[1]?.trim();
-
-            if (nomeNoCSV === nome && linkCertificado.includes("drive.google.com")) {
-              linkEncontrado = linkCertificado;
-              break;
+    <script>
+        function buscarCertificado() {
+            const nome = document.getElementById("nome").value.trim().toLowerCase();
+            if (!nome) {
+                alert("Por favor, digite um nome!");
+                return;
             }
-          }
 
-          const resultadoDiv = document.getElementById("resultado");
-          if (linkEncontrado) {
-            resultadoDiv.innerHTML = `
-              <p>Seu certificado está disponível!</p>
-              <a href="${linkEncontrado}" target="_blank" rel="noopener noreferrer">
-                Clique aqui para abrir e baixar
-              </a>
-            `;
-          } else {
-            resultadoDiv.innerHTML = "<p>Desculpe, não encontramos seu certificado. Verifique se digitou corretamente.</p>";
-          }
-        })
-        .catch(error => {
-          console.error('Erro ao acessar o CSV:', error);
-          document.getElementById("resultado").innerHTML = "<p>Erro ao buscar o certificado. Tente novamente mais tarde.</p>";
-        });
-    }
-  </script>
+            const urlCSV = "https://raw.githubusercontent.com/<seu-usuario>/<nome-do-repositorio>/main/BaseDeCertificados.csv"; // Substitua com o link correto
+
+            fetch(urlCSV)
+                .then(response => response.text())
+                .then(data => {
+                    const linhas = data.split('\n');
+                    let linkEncontrado = '';
+
+                    for (let i = 0; i < linhas.length; i++) {
+                        const linha = linhas[i].split(',');
+                        const nomeNoCSV = linha[0].trim().toLowerCase();
+                        const linkCertificado = linha[1]?.trim();
+
+                        if (nomeNoCSV === nome && linkCertificado.includes("drive.google.com")) {
+                            // Extrai o ID do link do Google Drive
+                            const match = linkCertificado.match(/\/d\/([^/]+)\//);
+                            if (match && match[1]) {
+                                const id = match[1];
+                                linkEncontrado = `https://drive.google.com/uc?export=download&id=${id}`;
+                            }
+                            break;
+                        }
+                    }
+
+                    const resultadoDiv = document.getElementById("resultado");
+                    if (linkEncontrado) {
+                        resultadoDiv.innerHTML = `<p>Seu certificado está disponível! <a href="${linkEncontrado}" download>Clique aqui para baixar.</a></p>`;
+                    } else {
+                        resultadoDiv.innerHTML = "<p>Desculpe, não encontramos seu certificado. Verifique se digitou corretamente.</p>";
+                    }
+                })
+                .catch(error => console.error('Erro ao acessar o CSV:', error));
+        }
+    </script>
 </body>
 </html>
