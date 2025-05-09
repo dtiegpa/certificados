@@ -41,16 +41,17 @@
                     const linhas = data.split('\n');
                     let linksEncontrados = [];
 
-                    // Tentando buscar o nome original ou com o sufixo (2)
+                    // Iterar sobre as linhas para encontrar o nome correspondente
                     for (let i = 1; i < linhas.length; i++) {  // Ignorando o cabeçalho
                         const linha = linhas[i].split(',');
                         let nomeNoCSV = linha[0].trim().toLowerCase();
                         const linkCertificado = linha[1].trim();
 
-                        // Tenta buscar nome com (2) no final
-                        const nomeComSuprimento = `${nome} (2)`;  // Nome formatado com o sufixo (2)
+                        // Verifica se o nome corresponde ao nome normal ou com sufixo (2)
+                        const nomeComSuprimento = `${nome} (2)`.toLowerCase();
 
-                        if (nomeNoCSV === nome || nomeNoCSV === nomeComSuprimento.toLowerCase()) {
+                        // Verificar se o nome ou o nome com sufixo (2) estão presentes
+                        if (nomeNoCSV === nome || nomeNoCSV === nomeComSuprimento) {
                             linksEncontrados.push(linkCertificado);
                         }
                     }
