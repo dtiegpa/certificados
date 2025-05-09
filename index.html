@@ -24,6 +24,7 @@
 
     <!-- Script do Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         function buscarCertificado() {
             const nome = document.getElementById("nome").value.trim().toLowerCase();
@@ -38,17 +39,17 @@
                     const linhas = data.split('\n');
                     let linkEncontrado = '';
 
-                    for (let i = 1; i < linhas.length; i++) {
+                    for (let i = 1; i < linhas.length; i++) { // Ignora cabeçalho
                         const linha = linhas[i].split(',');
-                        const nomeNoCSV = linha[0]?.trim().toLowerCase();
+                        const nomeNoCSV = linha[0].trim().toLowerCase();
                         const linkCertificado = linha[1]?.trim();
 
                         if (nomeNoCSV === nome && linkCertificado.includes("drive.google.com")) {
-                            // Extrai o ID do Google Drive
+                            // Extrai ID do Google Drive e converte para link de download direto
                             const match = linkCertificado.match(/\/d\/([^/]+)\//);
                             if (match && match[1]) {
-                                const fileId = match[1];
-                                linkEncontrado = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                                const id = match[1];
+                                linkEncontrado = `https://drive.google.com/uc?export=download&id=${id}`;
                             }
                             break;
                         }
@@ -58,17 +59,28 @@
                     if (linkEncontrado) {
                         resultadoDiv.innerHTML = `
                             <div class="alert alert-success">
-                                Seu certificado está disponível! 
-                                <a href="${linkEncontrado}" class="alert-link" download>Clique aqui para baixar.</a>
+                                Seu certificado está disponível!<br>
+                                <button class="btn btn-success mt-3" onclick="baixarAgora('${linkEncontrado}')">Clique aqui para baixar</button>
+                                <p class="text-muted mt-2">Se não iniciar o download, ele será aberto. Clique nos 3 pontinhos e selecione "Fazer download".</p>
                             </div>`;
                     } else {
-                        resultadoDiv.innerHTML = `<div class="alert alert-danger">Desculpe, não encontramos seu certificado. Verifique se digitou corretamente.</div>`;
+                        resultadoDiv.innerHTML = `
+                            <div class="alert alert-danger">
+                                Desculpe, não encontramos seu certificado. Verifique se digitou corretamente.
+                            </div>`;
                     }
                 })
                 .catch(error => {
                     console.error('Erro ao carregar o arquivo CSV:', error);
-                    document.getElementById("resultado").innerHTML = `<div class="alert alert-danger">Erro ao buscar o certificado.</div>`;
+                    document.getElementById("resultado").innerHTML = `
+                        <div class="alert alert-danger">
+                            Ocorreu um erro ao buscar o certificado. Tente novamente mais tarde.
+                        </div>`;
                 });
+        }
+
+        function baixarAgora(url) {
+            window.location.href = url;
         }
     </script>
 </body>
