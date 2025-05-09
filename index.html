@@ -44,10 +44,10 @@
                     // Iterar sobre as linhas para encontrar o nome correspondente
                     for (let i = 1; i < linhas.length; i++) {  // Ignorando o cabeçalho
                         const linha = linhas[i].split(',');
-                        const nomeNoCSV = linha[0].trim().toLowerCase();  // Nome no CSV
+                        const nomeNoCSV = linha[0]?.trim().toLowerCase();  // Nome no CSV
                         const linkCertificado = linha[1]?.trim();         // Link do certificado
 
-                        // Verificar se o nome está no CSV ou se tem a versão com sufixo (2)
+                        // Verificar se o nome corresponde ao nome sem (2) ou com (2)
                         if (nomeNoCSV === nome || nomeNoCSV === `${nome} (2)`) {
                             linksEncontrados.push(linkCertificado);
                         }
