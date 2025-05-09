@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Certificado</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
-        #resultado {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+    <!-- Link do Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Buscar Certificado</h1>
-    <p>Digite o nome completo para buscar o seu certificado:</p>
-    <input type="text" id="nome" placeholder="Digite o nome completo">
-    <button onclick="buscarCertificado()">Buscar</button>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4">Buscar Certificado</h1>
+                <p class="text-center">Digite o nome completo para buscar o seu certificado:</p>
+                <div class="input-group mb-3">
+                    <input type="text" id="nome" class="form-control" placeholder="Digite o nome completo">
+                    <button class="btn btn-primary" onclick="buscarCertificado()">Buscar</button>
+                </div>
+                <div id="resultado" class="mt-4 text-center"></div>
+            </div>
+        </div>
+    </div>
 
-    <div id="resultado"></div>
-
+    <!-- Script do Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Função que carrega os dados do CSV
+        // Função que carrega o arquivo CSV e realiza a busca
         function buscarCertificado() {
             const nome = document.getElementById("nome").value.trim().toLowerCase();
             if (!nome) {
@@ -32,21 +33,19 @@
                 return;
             }
 
-            // URL do arquivo CSV hospedado no GitHub (substitua pelo seu link)
-            const urlCSV = "https://raw.githubusercontent.com/<seu-usuario>/<nome-do-repositorio>/main/BaseDeCertificados.csv"; // Substitua com o caminho correto
-
-            // Usar fetch para obter os dados do CSV
-            fetch(urlCSV)
+            // Carregar os dados do arquivo CSV
+            fetch('BaseDeCertificados.csv')
                 .then(response => response.text())
                 .then(data => {
+                    // Dividir os dados em linhas e processá-los
                     const linhas = data.split('\n');
                     let linkEncontrado = '';
 
                     // Iterar sobre as linhas para encontrar o nome correspondente
-                    for (let i = 0; i < linhas.length; i++) {
+                    for (let i = 1; i < linhas.length; i++) {  // Ignorando o cabeçalho
                         const linha = linhas[i].split(',');
-                        const nomeNoCSV = linha[0].trim().toLowerCase();  // Pega o nome na primeira coluna
-                        const linkCertificado = linha[1].trim();          // Pega o link na segunda coluna
+                        const nomeNoCSV = linha[0].trim().toLowerCase();
+                        const linkCertificado = linha[1].trim();
 
                         // Se o nome corresponde, exibe o link
                         if (nomeNoCSV === nome) {
@@ -58,12 +57,12 @@
                     // Exibir o resultado
                     const resultadoDiv = document.getElementById("resultado");
                     if (linkEncontrado) {
-                        resultadoDiv.innerHTML = <p>Seu certificado está disponível! <a href="${linkEncontrado}" target="_blank">Clique aqui para baixar.</a></p>;
+                        resultadoDiv.innerHTML = `<div class="alert alert-success">Seu certificado está disponível! <a href="${linkEncontrado}" target="_blank" class="alert-link">Clique aqui para baixar.</a></div>`;
                     } else {
-                        resultadoDiv.innerHTML = "<p>Desculpe, não encontramos seu certificado. Verifique se digitou corretamente.</p>";
+                        resultadoDiv.innerHTML = `<div class="alert alert-danger">Desculpe, não encontramos seu certificado. Verifique se digitou corretamente.</div>`;
                     }
                 })
-                .catch(error => console.error('Erro ao acessar o CSV:', error));
+                .catch(error => console.error('Erro ao carregar o arquivo CSV:', error));
         }
     </script>
 </body>
