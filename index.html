@@ -27,11 +27,14 @@
     <script>
         // Função que carrega o arquivo CSV e realiza a busca
         function buscarCertificado() {
-            const nome = document.getElementById("nome").value.trim().toLowerCase();
+            const nome = document.getElementById("nome").value.trim();
             if (!nome) {
                 alert("Por favor, digite um nome!");
                 return;
             }
+
+            // Normalizar o nome digitado pelo usuário (remover acentos e converter para minúsculas)
+            const nomeNormalizado = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
             // Carregar os dados do arquivo CSV
             fetch('BaseDeCertificados.csv')
@@ -44,11 +47,14 @@
                     // Iterar sobre as linhas para encontrar o nome correspondente
                     for (let i = 1; i < linhas.length; i++) {  // Ignorando o cabeçalho
                         const linha = linhas[i].split(',');
-                        const nomeNoCSV = linha[0]?.trim().toLowerCase();  // Nome no CSV
-                        const linkCertificado = linha[1]?.trim();         // Link do certificado
+                        const nomeNoCSV = linha[0]?.trim();  // Nome no CSV
+                        const linkCertificado = linha[1]?.trim();  // Link do certificado
+
+                        // Normalizar o nome no CSV (remover acentos e converter para minúsculas)
+                        const nomeNoCSVNormalizado = nomeNoCSV?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
                         // Verificar se o nome corresponde ao nome sem (2) ou com (2)
-                        if (nomeNoCSV === nome || nomeNoCSV === `${nome} (2)`) {
+                        if (nomeNoCSVNormalizado === nomeNormalizado || nomeNoCSVNormalizado === `${nomeNormalizado} (2)`) {
                             linksEncontrados.push(linkCertificado);
                         }
                     }
