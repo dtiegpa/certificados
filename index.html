@@ -33,8 +33,8 @@
                 return;
             }
 
-            // Normalizar o nome digitado pelo usuário (remover acentos e converter para minúsculas)
-            const nomeNormalizado = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            // Normalizar o nome digitado pelo usuário (remover acentos e converter para maiúsculas)
+            const nomeNormalizado = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
 
             // Carregar os dados do arquivo CSV
             fetch('BaseDeCertificados.csv')
@@ -50,8 +50,8 @@
                         const nomeNoCSV = linha[0]?.trim();  // Nome no CSV
                         const linkCertificado = linha[1]?.trim();  // Link do certificado
 
-                        // Normalizar o nome no CSV (remover acentos e converter para minúsculas)
-                        const nomeNoCSVNormalizado = nomeNoCSV?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                        // Normalizar o nome no CSV (remover acentos e converter para maiúsculas)
+                        const nomeNoCSVNormalizado = nomeNoCSV?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
 
                         // Verificar se o nome corresponde ao nome sem (2) ou com (2)
                         if (nomeNoCSVNormalizado === nomeNormalizado || nomeNoCSVNormalizado === `${nomeNormalizado} (2)`) {
