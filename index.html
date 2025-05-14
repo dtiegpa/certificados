@@ -50,7 +50,7 @@
 
                     // Iterar sobre as linhas para encontrar o nome correspondente
                     for (let i = 1; i < linhas.length; i++) {  // Ignorando o cabeçalho
-                        const linha = linhas[i].split(',');
+                        const linha = linhas[i].split(';');
                         const nomeNoCSV = linha[0]?.trim();  // Nome no CSV
                         const linkCertificado = linha[1]?.trim();  // Link do certificado
 
