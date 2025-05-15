@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Certificados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f4f4f4;
+    }
+    input, button {
+      padding: 10px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    a {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consultar Certificado</h2>
+  <p>Digite seu nome completo conforme usado na inscrição:</p>
+  <input type="text" id="nome" placeholder="Ex: JOÃO SILVA" />
+  <button onclick="buscarLink()">Buscar</button>
+  <div id="resultado"></div>
+
+  <script>
+    async function buscarLink() {
+      const nomeDigitado = document.getElementById('nome').value.trim().toUpperCase();
+      const resultado = document.getElementById('resultado');
+      resultado.innerHTML = 'Buscando...';
+
+      try {
+        const response = await fetch('bdcertificados.csv');
+        const csv = await response.text();
+
+        const linhas = csv.split('\n').slice(1); // Ignora cabeçalho
+        let encontrado = false;
+
+        for (const linha of linhas) {
+          const [nome, link] = linha.split(',');
+
+          if (nome && link && nome.trim().toUpperCase() === nomeDigitado) {
+            resultado.innerHTML = `Certificado encontrado: <a href="${link.trim()}" target="_blank">Clique aqui para acessar</a>`;
+            encontrado = true;
+            break;
+          }
+        }
+
+        if (!encontrado) {
+          resultado.innerHTML = 'Nome não encontrado. Verifique se digitou corretamente.';
+        }
+      } catch (error) {
+        resultado.innerHTML = 'Erro ao buscar os dados.';
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
