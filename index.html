@@ -21,16 +21,33 @@
       .card {
         margin-top: 20px;
       }
+      .logo-egpa {
+        max-width: 120px !important;
+      }
+      .card-title {
+        font-size: 1.3rem !important;
+      }
+      .card-body, .input-group, .form-control, .btn {
+        font-size: 1rem !important;
+      }
+    }
+    @media (max-width: 400px) {
+      .logo-egpa {
+        max-width: 90px !important;
+      }
+      .card-title {
+        font-size: 1.1rem !important;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+      <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6">
         <!-- Logo no topo -->
         <div class="text-center mb-4">
-          <img src="logo-egpa.png" alt="Logo EGPA" class="mb-2 img-fluid" style="max-width: 180px; width: 100%; height: auto;">
+          <img src="logo-egpa.png" alt="Logo EGPA" class="mb-2 img-fluid logo-egpa" style="max-width: 180px; width: 100%; height: auto;">
         </div>
         <div class="card shadow">
           <div class="card-body">
