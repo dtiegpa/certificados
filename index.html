@@ -50,21 +50,26 @@
 
         const linhas = csv.split('\n').slice(1); // Ignora cabeçalho
         let encontrado = false;
+        let linksEncontrados = [];
 
         for (const linha of linhas) {
           const [nome, link] = linha.split(',');
 
           if (nome && link && nome.trim().toUpperCase() === nomeDigitado) {
-            resultado.innerHTML = `
-              <div class="alert alert-success" role="alert">
-                Certificado encontrado: <a href="${link.trim()}" target="_blank" class="alert-link">Clique aqui para acessar</a>
-              </div>`;
+            linksEncontrados.push(link.trim());
             encontrado = true;
-            break;
           }
         }
 
-        if (!encontrado) {
+        if (encontrado) {
+          resultado.innerHTML = `
+            <div class="alert alert-success" role="alert">
+              Certificado${linksEncontrados.length > 1 ? 's encontrados' : ' encontrado'}:<br>
+              ${linksEncontrados.map((l, i) => 
+                `<a href="${l}" target="_blank" class="alert-link">Clique aqui para acessar ${linksEncontrados.length > 1 ? (i+1) : ''}</a>`
+              ).join('<br>')}
+            </div>`;
+        } else {
           resultado.innerHTML = `<div class="alert alert-warning" role="alert">
             <strong>Certificado indisponível!</strong><br>
             A carga horária da certificação não foi cumprida.<br>
